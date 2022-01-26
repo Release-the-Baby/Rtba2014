@@ -1,0 +1,283 @@
+---
+title: "003 Basics of R Programming (Data Frames)"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<!-- ## R Markdown -->
+
+<!-- This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>. -->
+
+<!-- When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this: -->
+
+<!-- ```{r cars} -->
+<!-- summary(cars) -->
+<!-- ``` -->
+
+<!-- ## Including Plots -->
+
+<!-- You can also embed plots, for example: -->
+
+<!-- ```{r pressure, echo=FALSE} -->
+<!-- plot(pressure) -->
+<!-- ``` -->
+
+<!-- Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot. -->
+
+
+# Basics of R Programming (Data Frames)
+
+Data Frames are perhaps the most commonly used data structures for data analytics. It is a 2-dimensional array. The following is the Iris flower dataset which consists of 5 columns. 4 columns with the attributes (Sepal.Length, Sepal.Width, Petal.Length, Petal.Width) of each data instance and the corresponding Iris Species (versicolor, virginica, setosa).
+
+
+##Accessing Data Frames
+
+Data Frames can be thought of as a collection of vectors where **each column is a vector**.
+
+```{r}
+
+#use the $ operator and the column name
+
+#(case sensitive)
+
+iris$Sepal.Length #5.1 4.9 4.7 4.6 5.0 ...
+
+class(iris$Sepal.Length) #numeric
+
+
+#alternatively
+
+#this notation is useful for cases where the column
+
+#name contain spaces
+
+iris[["Sepal.Length"]] #5.1 4.9 4.7 4.6 5.0 ...
+
+```
+
+Since each column is just a vector, it is possible to use any vector operators we have covered in the previous exercise
+
+```{r}
+
+#get the first 3 values sepal lengths
+
+iris$Sepal.Length[1:3] #5.1 4.9 4.7
+
+```
+
+
+Since Data Frames are 2D arrays, it is also possible to access the rows using **[ ]**. Just take note that we have to specify both the row index and column index (i.e. **[ROW_INDEX(ES), COLUMN_INDEX(ES)]**). Both row index(es) and column index(es) are optional.
+
+
+```{r}
+
+#get the 10th row
+
+#take note of the ,
+
+#if we don't specify the column index, it will return all columns
+
+iris[10,]
+
+#   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+
+#10          4.9         3.1          1.5         0.1  setosa
+
+
+#get the first column
+
+iris[,1] #5.1 4.9 4.7 4.6 5.0 ...
+
+
+#can specify both to get a specific value
+
+#this will get the 3rd column value of row 2
+
+iris[2, 3] #1.4
+
+
+#returns a data frame with the first 10 rows of the
+
+#1st and 3rd column
+
+iris[1:10, c(1,3)]
+
+```
+
+Similar to vector, we can also modify the values in the Data Frame. Some other common Data Frames operations include the following
+
+```{r}
+
+#remove a column
+
+#by setting it to NULL
+
+#this is useful for cases where we want to remove columns which
+
+#are just ID value
+
+irisCopy <- iris
+
+irisCopy$Species <- NULL
+
+
+#View() will display the data frame in RStudio like a spreadsheet
+
+View(irisCopy)
+
+
+#this will create a new column named Sepal.Length2
+
+#with values that is twice of the Sepal.Length column
+
+irisCopy$Sepal.Length2 <- irisCopy$Sepal.Length * 2
+
+
+#alternatively we could do cbind()
+
+#i.e. column binding
+
+#note that it is possible for variable names to contain .
+
+#this will create a dataframe by combining the iris dataset
+
+#with a vector and the column is named Sepal.Length2
+
+Sepal.Length2 <- irisCopy$Sepal.Length * 2
+
+cbind(iris, Sepal.Length2)
+
+
+#use rbind() to do row binding
+
+#this will return a dataframe by combining
+
+#the iris dataset with another row
+
+newFlower <- c(5.0, 3.0, 1.5, 0.2, NA)
+
+rbind(iris, newFlower)
+
+```
+
+
+
+## Column Names and Row Names
+
+Note that each Data Frame has a set of column names and row names
+
+```{r}
+
+colnames(iris) #"Sepal.Length" "Sepal.Width"  "Petal.Length" "Petal.Width"  "Species"
+
+rownames(iris) #"1" "2" "3" "4" "5" ...
+
+```
+
+
+
+It is also possible to modify the column and row names by assigning to **colnames() and rownames()**
+
+```{r}
+
+irisCopy <- iris
+
+colnames(irisCopy) <- c("sepal_length", "sepal_width", "petal_length", "petal_width", "species")
+
+colnames(irisCopy) #"sepal_length" "sepal_width"  "petal_length" "petal_width"  "species"
+
+
+#typically row names should not be used for data modeling
+
+#we could use the row names to better represent the data
+
+#rather than just index values (1, 2, 3, etc)
+
+rownames(irisCopy)[1] <- "first setosa"
+
+View(irisCopy)
+
+```
+
+
+## Creating Data Frames
+
+Apart from using rbind() and cbind(), data frames can also be initialized by **using vectors**.
+
+```{r}
+
+name <- c("john doe", "jane doe")
+
+age <- c(20, 18)
+
+data.frame(name, age)
+
+#      name age
+#1 john doe  20
+#2 jane doe  18
+
+```
+
+
+
+## Reading and Writing Data
+
+More commonly data is read into a Data Frame through a CSV file. We can use the **read.XXX()** functions to read in the relevant format (e.g. csv, table, spss) into a data frame. It can be a local file or from a URL. There is also the corresponding **write.XXX()** which will take in a Data Frame and write to a physical local in the working directory.
+
+*Working directory is the main directory where we will be reading and writing files to if the absolute path is not specified*
+
+```{r}
+
+covidCases0101 <- read.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/01-01-2021.csv")
+
+View(covidCases0101)
+
+
+covidCases0101Simplified <- covidCases0101[, c("Country_Region", "Confirmed", "Deaths")]
+
+#set working directory to c:\
+
+setwd("D:/NUS/ChadCode/TBA2104/03dataframe")
+
+write.csv(covidCases0101Simplified, "covid_01_01_2021.csv", row.names = F)
+
+
+write.table(covidCases0101Simplified, "covid_01_01_2021.txt", row.names = F)
+
+```
+
+
+
+### Other Common Data Frame Operations
+
+Data Frame is a very common data structure used in data analytics. Not just in R but also in other languages like Python (Pandas). Here are some examples of useful functions and details about Data Frames.
+
+
+```{r}
+
+#nrow() will return the number of rows
+
+nrow(iris) #150
+
+
+#ncol() will return the number of columns
+
+ncol(iris) #5
+
+
+#for vectors, there's a length() function to get the size
+
+length(iris$Species) #150
+
+
+#possible to filter the data frame using values
+
+#this will return a new data frame with just the Setosa species
+
+iris[iris$Species == "setosa",]
+
+```
+
