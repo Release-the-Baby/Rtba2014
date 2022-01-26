@@ -1,0 +1,157 @@
+---
+title: "TBA2104 Predictive Analytics Tutorial/Lab 1"
+author: "Chan Kong Yew"
+date: "January 20, 2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd('D:/NUS/ChadCode/TBA2104/tut01')
+```
+
+
+1. In this exercise, we will be using the College (College.csv) data set which can be downloaded from LumiNUS. This data set contains a number of variables for 777 different universities and colleges in the US. The variables are: 
+  
+    * Private : Public/private indicator
+    * Apps : Number of applications received
+    * Accept : Number of applicants accepted
+    * Enroll : Number of new students enrolled
+    * Top10perc : New students from top 10% of high school class
+    * Top25perc : New students from top 25% of high school class
+    * F.Undergrad : Number of full-time undergraduates
+    * P.Undergrad : Number of part-time undergraduates
+    * Outstate : Out-of-state tuition
+    * Room.Board : Room and board costs
+    * Books : Estimated book costs
+    * Personal : Estimated personal spending
+    * PhD : Percent of faculty with Ph.D.’s
+    * Terminal : Percent of faculty with terminal degree
+    * S.F.Ratio : Student/faculty ratio
+    * perc.alumni : Percent of alumni who donate
+    * Expend : Instructional expenditure per student
+    * Grad.Rate : Graduation rate
+
+
+**Note:**
+At any point in the lab exercise, you can type ?func in R or RStudio to see the help on the functions  
+  
+    a) Download *College.csv* onto your desktop or any directory. Before reading the data into R, it can be viewed in Excel or a text editor.  
+  
+    b) Open RStudio and change the working directory to the path where you have placed *College.csv*  
+  
+    c) Use the read.csv() function to read the data into a variable college in R  
+    Note: did you ensure that you do not read the header row?
+
+```{r Part.C, echo = TRUE}
+
+college <- read.csv('college.csv') # default header = F
+
+```
+
+```{r echo=FALSE}
+View(college)
+print(paste('college imported as: ', class(college)))
+```
+
+
+    d) Use the head() function to read the first 3 rows of college dataframe.  
+```{r Part.D, echo=TRUE}
+
+head(college)
+
+```
+    
+    
+    e) Retrieve the vector of the university names from the college dataframe.
+    
+```{r Part.E}
+
+# college$X # results too long
+print('college$X  results too long for page')
+print(paste('show only first 10 rows: ', college[c(1:10),'X']))
+
+```
+    
+    
+    f) When answering (e), if there are many columns or the column names are not obvious, it is sometimes useful to be able to programmatically retrieve the column names. Try obtaining a vector of the column names of the college dataframe.  
+    
+```{r Part.F, echo=TRUE}
+
+colnames(college)
+
+```
+    
+  
+    g) Just like how column names are used to identify the columns of a dataframe, there is also a row names for each dataframe used to identify the rows of the dataframe. Obtain a vector of the row names of the college dataframe.  
+      
+```{r Part.G, echo=TRUE}
+
+rownames(college)
+
+```
+      
+    h) Ideally, we want to set the row names to its corresponding university names and remove 1 the existing column of university names. What do you think are the commands to do this?  
+     
+```{r Part.H, echo=TRUE}
+
+#remove rownames
+rownames(college) <- NULL
+
+#assign new name
+rownames(college) <- college$X
+
+rownames(college)
+
+```
+     
+    i) What is the total number of applications received? How about the average number of applications received by a university?  
+    
+```{r Part.I, echo=TRUE}
+
+#any NA?
+print('any NAs in Apps col?')
+which(is.na(college$Apps))
+
+#sum up
+print(paste('total applications: ', sum(college$Apps,na.rm = TRUE)))
+
+#mean
+print(paste('avg no of applications: ',mean(college$Apps,na.rm = TRUE)))
+
+```
+    
+        
+    j) Obtain the vector of university names that received more than 5000 applications.  
+    
+```{r Part.J, echo=TRUE}
+
+college[which(college$Apps > 5000),c(which(colnames(college) == 'X'),which(colnames(college) == 'Apps'))]
+
+```
+    
+        
+    k) What is the average graduation rate for universities that received more than 5000 applications? Is the average graduate rate higher compared with universities that did not receive more than 5000?  
+          
+```{r Part.K}
+
+C5kmore <- college[which(college$Apps > 5000),c(which(colnames(college) == 'X'),which(colnames(college) == 'Apps'),which(colnames(college) == 'Grad.Rate'))]
+
+print(paste('avg graduation rate for universities with more than 5,000 applications: ', round(mean(C5kmore$Grad.Rate),4)))
+
+C5kless <- college[which(college$Apps <= 5000),c(which(colnames(college) == 'X'),which(colnames(college) == 'Apps'),which(colnames(college) == 'Grad.Rate'))]
+
+print(paste('avg graduation rate for universities with -less- than 5,000 applications: ', round(mean(C5kless$Grad.Rate),4)))
+
+```
+          
+    l) Which universities have the highest/lowest number of full-time undergrads?
+  
+```{r Part.L, echo=TRUE}
+
+college[which.max(college$F.Undergrad),c(which(colnames(college) == 'X'),which(colnames(college) == 'F.Undergrad'))]
+
+college[which.min(college$F.Undergrad),c(which(colnames(college) == 'X'),which(colnames(college) == 'F.Undergrad'))]
+
+```
+
