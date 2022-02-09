@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1643649741898.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1291927320",
+    "id" : "67E5B4D5",
+    "lastKnownWriteTime" : 1643659582,
+    "last_content_update" : 1643659582727,
+    "path" : "D:/NUS/ChadCode/TBA2104/tut02/T2.R",
+    "project_path" : "T2.R",
+    "properties" : {
+        "cursorPosition" : "40,26",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

@@ -1,0 +1,9 @@
+"0","smaller_college_df <- college[c(which(colnames(college) == 'Apps'),which(colnames(college) == 'Accept'),which(colnames(college) == 'Enroll'),which(colnames(college) == 'Grad.Rate'))]
+#ensure that this should be data.frame
+class(smaller_college_df)
+"
+"1","[1]"
+"1"," ""data.frame"""
+"1","
+"
+"0","pairs(smaller_college_df)"

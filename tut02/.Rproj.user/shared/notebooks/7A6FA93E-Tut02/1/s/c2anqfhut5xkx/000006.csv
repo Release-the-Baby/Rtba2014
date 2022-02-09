@@ -1,0 +1,4 @@
+"0","college<-read.csv('College.csv',header = TRUE)"
+"0","view(college)"
+"2","Error in view(college) : could not find function ""view""
+"

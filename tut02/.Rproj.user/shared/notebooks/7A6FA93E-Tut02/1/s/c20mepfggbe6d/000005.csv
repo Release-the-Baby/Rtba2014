@@ -1,0 +1,6 @@
+"0","colors_top10perc <- NA"
+"0","colors_top10perc[college$Top10perc >  70] <- 'green'"
+"0","colors_top10perc[college$Top10perc <= 70] <- 'yellow'"
+"0","colors_top10perc[college$Top10perc <= 50] <- 'orange'"
+"0","colors_top10perc[college$Top10perc <= 30] <- 'red'"
+"0","plot(college$Top10perc, col=colors_top10perc)"

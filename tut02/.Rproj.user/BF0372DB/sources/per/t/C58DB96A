@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1643619291968.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "C58DB96A",
+    "lastKnownWriteTime" : 1643616268,
+    "last_content_update" : 1643619291968,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "2168450A",
+        "caption" : "appsPvt",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=appsPvt&cache_key=2168450A",
+        "displayedObservations" : "777",
+        "environment" : "",
+        "object" : "appsPvt",
+        "preview" : "0",
+        "totalObservations" : "777",
+        "variables" : "2"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

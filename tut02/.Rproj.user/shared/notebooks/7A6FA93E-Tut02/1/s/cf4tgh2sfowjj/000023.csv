@@ -1,0 +1,3 @@
+"0","# #######################################################"
+"0","pFrame <- college[c(which(colnames(college) == 'Apps'),which(colnames(college) == 'Accept'),which(colnames(college) == 'Enroll'),which(colnames(college) == 'Grad.Rate'))]"
+"0","pairs(pFrame, col=c('peachpuff','darkslateblue','goldenrod1','brown4')[],upper.panel = NULL)"

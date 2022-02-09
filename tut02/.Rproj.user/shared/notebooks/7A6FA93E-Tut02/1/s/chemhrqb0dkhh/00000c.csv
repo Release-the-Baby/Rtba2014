@@ -1,0 +1,2 @@
+"0","par(mfrow=c(1,2))"
+"0","plot(college$Top10perc, col=colors_top10perc)"

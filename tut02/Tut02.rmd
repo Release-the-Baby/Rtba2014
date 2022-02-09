@@ -1,0 +1,240 @@
+---
+title: "Tut02"
+author: "Chan Kong Yew"
+date: "January 31, 2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd("D:/NUS/ChadCode/TBA2104/tut02")
+```
+
+# Tutorial/Lab 2
+
+##1. In this exercise, we will still be using the College (College.csv) data set from Tutorial/Lab 1
+
+```{r loadfile, echo=TRUE}
+
+college<-read.csv('College.csv',header = TRUE)
+View(college)
+```
+
+### a) Use the summary() function to produce a numerical summary of the variables in the data set.
+
+```{r 1a, echo=TRUE}
+summary(college)
+```
+
+
+### b) Using the pairs() function to produce a scatterplot matrix of the following columns: Apps, Accept, Enroll, Grad.Rate.
+
+http://rstudio-pubs-static.s3.amazonaws.com/19462_040b25c21f0a40e8a6f807f164cff2bd.html
+
+
+1. First obtain another dataframe that consists of 4 columns
+Apps, Accept, Enroll, Grade.Rate (in this order) and assign 
+to a variable named `smaller_college_df`
+Ensure that the column names are Apps, Accept, Enroll, Grade.Rate (in this order)
+Also make sure that `smaller_college_df` is a data.frame
+
+2. Using the pairs function, produce a scatterplot matrix of `smaller_college_df`
+
+
+```{r 1b, echo=TRUE}
+
+# TUTORIAL SUBMISSION ###################################
+
+#Complete implementation...
+smaller_college_df <- college[c(which(colnames(college) == 'Apps'),which(colnames(college) == 'Accept'),which(colnames(college) == 'Enroll'),which(colnames(college) == 'Grad.Rate'))]
+
+
+#ensure that this should be data.frame
+class(smaller_college_df)
+
+pairs(smaller_college_df)
+
+# #######################################################
+
+
+pFrame <- college[c(which(colnames(college) == 'Apps'),which(colnames(college) == 'Accept'),which(colnames(college) == 'Enroll'),which(colnames(college) == 'Grad.Rate'))]
+
+pairs(pFrame, col=c('peachpuff','darkslateblue','goldenrod1','brown4')[],upper.panel = NULL)
+
+
+# from lecture notes
+#Clustering of Iris Plant
+Iris.features = iris
+#remove the class column
+Iris.features$Species <- NULL
+#using k-means clustering
+results <- kmeans(Iris.features, 3)
+pairs(Iris.features, col=c("red","green3", "blue")[results$cluster])
+```
+
+| colName | pair-row | pair-col | corr x-axis | corr y-axis |  
+| :-- | :-- | :-- | :-- | :-- |  
+| Apps | 1 | 1 | Apps | Apps |    
+| Apps | 1 | 2 | Accept | Apps |   
+| Apps | 1 | 3 | Enroll | Apps |   
+| Apps | 1 | 4 | Grad.Rate | Apps |   
+| Accept | 2 | 1 | Apps | Accept |   
+| Accept | 2 | 2 | Accept | Accept |   
+| Accept | 2 | 3 | Enroll | Accept |   
+| Accept | 2 | 4 | Grad.Rate | Accept |   
+| Enroll | 3 | 1 | Apps | Enroll |   
+| Enroll | 3 | 2 | Accept | Enroll |   
+| Enroll | 3 | 3 | Enroll | Enroll |   
+| Enroll | 3 | 4 | Grad.Rate | Enroll |   
+| Grad.Rate | 4 | 1 | Apps | Grad.Rate |   
+| Grad.Rate | 4 | 2 | Accept | Grad.Rate |   
+| Grad.Rate | 4 | 3 | Enroll | Grad.Rate |   
+| Grad.Rate | 4 | 4 | Grad.Rate | Grad.Rate | 
+
+### c) Generate the same plot as (b) but differentiating the Private and Non-private University using different colors.
+
+```{r 1c, echo=TRUE}
+
+# TUTORIAL SUBMISSION #######################
+#1. We will use "blue" to denote private university and "red" to denote non-private
+#university. To do that, first obtain a vector of character (`colors`) containing 
+#the value "blue" or "red" matching the university type for that row.
+#Hint: you might find it useful to cast a character to factor type
+#2. Using colors, generate the same plot as (b) using the same colors from `colors` 
+
+#Complete implementation...
+pcolors <- NA
+pcolors[college$Private == 'Yes'] <- 'blue'
+pcolors[college$Private == 'No'] <- 'red'
+colors<- as.factor(pcolors)
+
+pairs(smaller_college_df, col=colors)
+
+
+
+```
+
+
+### d) Use the plot() function to produce side-by-side boxplots of Apps vs Private. Label your axes and the plot and provide a title for your plot.
+
+boxplot() will as for y ~ group an y has to be *numeric* whereas
+using plot() auto detects data given and throws out a scatterplot
+but requires the *group* to be a factor
+
+
+```{r 1d, echo=TRUE}
+
+# TUTORIAL SUBMISSION ###################################################
+
+#Use the plot() function to produce a side-by-side boxplots of Apps vs Private.
+#Label your x-axis "Private?", y-axis "Number of Applications", and the title
+#"Comparison of number of applications for Private and Public University"
+#Hint: you might find it useful to cast a character to factor type
+
+question_d <- function(){
+  #Complete implementation...
+  plot(as.factor(college$Private), college$Apps, xlab = 'Private?', ylab = 'Number of Applications', main = 'Comparison of number of applications for Private and Public University')
+  
+  
+  appsPvt <- college[c(which(colnames(college) == 'Private'),which(colnames(college) == 'Apps'))]
+  appsPvt$Apps <- as.numeric(appsPvt$Apps)
+  
+  # y ~ grp
+  boxplot(appsPvt$Apps~appsPvt$Private, xlab = 'Private?', ylab = 'Number of Applications', main = 'Comparison of number of applications for Private and Public University')
+
+}
+question_d()
+
+# My try ###############################################################
+
+#using the airquality dataset
+airquality[3:4,]
+boxplot(airquality)
+
+```
+
+
+### e) Produce a scatterplot based on Top10perc (percentage of new students from top 10% of the high school). Using different colors for the different percentages (<=30, <=50, <=70, >70)
+
+#Generate the scatterplot based on Top10perc
+#To do that, first obtain a vector of character (`colors_top10perc`) containing 
+#following color value:
+#<=30 : "red"
+#<=50 : "orange"
+#<=70 : "yellow"
+#>70  : "green"
+
+```{r 1e, echo=TRUE}
+
+colors_top10perc <- NA
+colors_top10perc[college$Top10perc >  70] <- 'green'
+colors_top10perc[college$Top10perc <= 70] <- 'yellow'
+colors_top10perc[college$Top10perc <= 50] <- 'orange'
+colors_top10perc[college$Top10perc <= 30] <- 'red'
+
+plot(college$Top10perc, col=colors_top10perc)
+
+```
+
+
+
+### example for 1(e)
+https://statisticsglobe.com/r-pairs-plot-example/
+
+```{r EgFor1e, echo=TRUE}
+
+set.seed(525354)                       # Set seed for reproducibility
+N <- 1000                              # Sample size of 1000
+ 
+x1 <- rnorm(N)                         # Create variable
+x2 <- x1 + rnorm(N, 0, 3)              # Create correlated variable
+x3 <- 2 * x1 - x2 + rnorm(N, 0, 2)     # Create another correlated variable
+ 
+data <- data.frame(x1, x2, x3)         # Combine all variables to data.frame
+
+
+# Example 4: Modify pairs R Plot by Group
+# Quite often you will have different subsets or subgroups in your data. Let’s add a group 
+# indicator (three groups 1, 2 & 3) to our example data to simulate such a situation:
+group <- NA
+group[data$x1 < - 0.5] <- 1
+group[data$x1 >= - 0.5 & data$x1 <= 0.5] <- 2
+group[data$x1 > 0.5] <- 3
+
+# Now, let’s apply the pairs function again, but this time dependent on the group variable:
+pairs(data[ , 1:3],
+      col = c("red", "cornflowerblue", "purple")[group],   # Change color by group
+      pch = c(8, 18, 1)[group],                            # Change points by group
+      labels = c("var1", "var2", "var3"),
+      main = "This is an even nicer pairs plot in R")
+
+```
+
+
+
+### f) Use the hist() function to generate a histogram of Top10perc. Add in the same color coding scheme as (e)
+
+```{r 1f, echo=TRUE}
+
+question_f <- function(){
+  #Complete implementation...
+  hist(college$Top10perc, col=colors_top10perc)
+}
+question_f()
+
+```
+
+
+### g) The command par(mfrow=c(1,2)) allows you to divide the plotting window into multiple regions for plotting multiple plot. Try typing it on the console window together with the plotting commands from (f) and the (g). How can you increase the regions to allow 4 diagrams instead?
+
+```{r 1g, echo=TRUE}
+
+par(mfrow=c(1,2))
+plot(college$Top10perc, col=colors_top10perc)
+hist(college$Top10perc, col=colors_top10perc)
+
+```
+
+### h) Try exploring the data with different charts.
+
+
