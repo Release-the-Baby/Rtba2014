@@ -1,0 +1,977 @@
+---
+title: "TBA4220 Practical Sheet 01"
+output:
+  html_document:
+    toc: yes
+    df_print: paged
+  html_notebook:
+    toc: yes
+editor_options:
+  markdown:
+    wrap: 72
+---
+
+# Objectives
+
+After successfully completing this practical session you would be able
+to: (a) Gain an introductory knowledge for use R studio for R
+programming. (b) Determine R functions for data table manipulation (c)
+Learn about the apply family of operations (d) Understand the importance
+of descriptive statistics in Spatial data
+
+# Equipment required
+
+Any type of Operating System with installed R studio and R.
+
+# Exercises
+
+This practical contains 4 exercises. Write the correct R code for at
+least one exercise and submit the code as an R script file (your
+matriculation number should be the file name) to the LumiNUS by the end
+of the lecture.
+
+# Introduction
+
+In this practical session, you'll become familiar with R, the one of
+best programming languages used for spatial analytics. Once you become
+comfortable working with R, it would be very easy to dive into spatial
+analytics. In spatial data analysis, we have to apply the same set of
+commands repeatedly. Such as applying the same algorithm to different
+data, different attributes, create maps based on different conditions so
+on. R supports such repeated actions via functions, loops, conditions,
+etc. According to that, this practical session aims to provide some
+basic programming principles and routines in R.
+
+# 1 The Basic Ingredients of R
+
+## Assignment
+
+➼ R_object \<- value\
+➼ R_object is a variable. The sign "\<-" assign a value to the R object.
+This also called as "gets". That is R_object gets value\
+➼ Also "=" equal sing can be used as an alternative. But this performs
+the soft assignment.\
+➼ The basic assignment type is R is to a vector of values\
+1.Individual values x \<-10, y \<-100, or z\<-x OR\
+2.Multiple values a \<- c(10, 100, 200)
+
+## Other operations/functions
+
+➼ Sum\
+➼ Mean\
+➼ Max etc\
+
+# 2 Data Types and Data classes
+
+## A. Data Types
+
+➼ Data in R organized into a hierarchy of data types\
+➼ Each of the types associated with a test and a conversion function\
+
+1.  Test: to check the whether the used value is given data type, this
+    will return TRUE or\
+    FALSE\
+2.  Conversion: to convert the used value to the given data type\
+    ![](img/01.01.DataType.png)
+
+### Numeric data type: conversion and test
+
+```{r}
+# create numeric object 
+numeric(8)
+
+# conversions
+as.numeric(c("1980","−8","Geography"))
+as.numeric(c(FALSE,TRUE))
+
+# tests
+is.numeric(c(8, 8))
+is.numeric(c(8, 8, 8, "8"))
+```
+
+### Logical data type: conversion and test
+
+```{r}
+logical(7)
+# conversion
+as.logical(c(7,5,0,−4,5))
+# TRUE and FALSE can be converted to 1 and 0
+as.logical(c(7,5,0,−4,5)) ∗ 1
+as.logical(c(7,5,0,−4,5)) + 0
+# different ways to declare TRUE and FALSE
+as.logical(c("True","T","FALSE","Raspberry","9","0", 0))
+
+```
+
+## B. Data Classes
+
+### i. Vectors
+
+Vectors are the commonly used data structure and the standard one
+dimensional R variable Creating a vector\
+a. When specifying a character or logical\
+b. Using the function of vector (provided the length and mode)
+
+```{r}
+# defining vectors
+vector(mode = "numeric", length = 8)
+vector(length = 8)
+# testing and conversion
+tmp <- data.frame(a=10:15, b=15:20)
+class(tmp)
+is.vector(tmp)
+as.vector(tmp)
+class(tmp)
+tmp
+```
+
+### ii. Matrix
+
+1\. Defining a matrix: matrix (ncol =3, nrow= 2)\
+2. Checking tmp in the above example is a matrix : is.matrix(temp)\
+3. Convert tmp into matrix : as.matrix (temp)\
+4. Naming matrix rows and columns
+
+```{r}
+flow <- matrix(c(2000, 1243, 543, 1243, 212, 545, 654, 168, 109), 
+               c(3,3), 
+               byrow=TRUE)
+# Rows and columns can have names, not just 1,2,3,...
+colnames(flow) <- c("Leeds", "Maynooth", "Elsewhere")
+rownames(flow) <- c("Leeds", "Maynooth", "Elsewhere")
+flow
+```
+
+```{r}
+# and functions exist to summarise
+outflows <- rowSums(flow)
+outflows
+```
+
+### iii. Factors
+
+1\. Factor can define levels for the parameter.\
+2. Therefore factors are useful when data values fall into one of a
+number of predefined classes.\
+3. Both is.factor and as.factor can be applied to test and convert
+vectors.\
+4. Table function will count total data values under each level
+
+```{r}
+# a vector assignment
+house.type <- c("Bungalow", "Flat", 
+                "Flat", "Detached", 
+                "Flat", "Terrace", 
+                "Terrace")
+
+# a factor assignment
+house.type <- factor(c("Bungalow", "Flat", "Flat", "Detached", 
+                       "Flat", "Terrace", "Terrace"), 
+                     levels=c("Bungalow","Flat","Detached",
+                              "Semi","Terrace"))
+house.type
+writeLines('\ncall table') # insert blank line 
+# table can be used to summarise
+table(house.type)
+writeLines('') # insert blank line 
+
+# levels controls what can be assigned
+house.type <- factor(c("People Carrier", "Flat", "Flat", 
+                       "Hatchback", "Flat", "Terrace","Terrace"), 
+                     levels=c("Bungalow","Flat","Detached",
+                              "Semi","Terrace"))
+house.type
+```
+
+### iv. List
+
+1\. List can have different data types together in a single data
+structure.\
+2. Similar to the other classes list also available with as.list and
+is.list functions\
+3. In addition it includes append and lapply functions\
+a. append: two lists can be joined together\
+b. lapply : can apply different functions to each element of a list
+
+```{r}
+tmp.list <- list("Lex Comber",
+                 c(2015, 2018), 
+                 "Lecturer", 
+                 matrix(c(6,3,1,2), c(2,2)))
+tmp.list
+writeLines('\nSelect element 4:')
+# elements of the list can be selected
+tmp.list[[4]]
+writeLines('')
+append(tmp.list, list(c(7,6,9,1)))
+writeLines('')
+tmp
+writeLines('')
+# lapply with different functions
+lapply(tmp.list[[2]], is.numeric)
+writeLines('')
+lapply(tmp.list, length)
+```
+
+### v. data.frame
+
+1\. data frame classes can hold different data types in different
+columns\
+2. Data.frame includes series of vectors of equal length (columns)\
+3. Data.frame function default encodes character strings into factors\
+4. To overcome this the df can be defined using stringsAsFactors = False
+
+```{r}
+df <- data.frame(dist = seq(0,400, 100), 
+                 city = c("Leeds", "Nottingham", 
+                          "Leicester", "Durham","Newcastle"))
+str(df)
+writeLines('')
+
+df$city
+writeLines('')
+
+df <- data.frame(dist = seq(0,400, 100), 
+                 city = c("Leeds", "Nottingham", 
+                          "Leicester", "Durham","Newcastle"),
+                 stringsAsFactors = FALSE)
+str(df)
+writeLines('')
+
+df <- data.frame(dist = seq(0,400, 100), 
+                 city = c("Leeds", "Nottingham", 
+                          "Leicester", "Durham","Newcastle"),
+                 stringsAsFactors = TRUE)
+str(df)
+```
+
+### vi. tibble
+
+1\. Similar to data.frame tibble also can hold different data types\
+2. This is a reworking of the data.frame class.\
+3. It is possible to convert between tibble and data.frame\
+4. Also functions like\
+"names()", "colnames()", "rownames()",\
+"length()", "ncol", "nrow()",\
+"cbind()", and "rbind()"\
+can be used with both tibble and data.frame
+
+```{r}
+library(tibble)
+```
+
+```{r}
+df <- data.frame(dist = seq(0,400, 100), 
+                 city = c("Leeds", "Nottingham", 
+                          "Leicester", "Durham","Newcastle"),
+                 stringsAsFactors = FALSE)
+str(df)
+writeLines('')
+
+tb <- tibble(dist = seq(0,400, 100),
+city = c("Leeds", "Nottingham", "Leicester", "Durham", "Newcastle"))
+#The partial matching behavior in the data.frame.
+df$city
+writeLines('')
+
+tb$city
+writeLines('')
+
+#Column binding operation
+cbind(df, Pop = c(700,250,230,150,1200))
+df
+writeLines('')
+```
+
+# 3 Use of condition and loop in a function
+
+As similar to other programming languages R also provides if condition\
+➼ In if condition we execute a group of consequent statements together\
+➼ Such group of statements is called "code blocks" and curly brackets
+are used to group\
+them
+
+Also, loops are commonly used in R\
+Two types of loops available\
+1. Deterministic loop (for loop): Executed fixed number of times
+specified at the beginning of\
+the loop\
+2. Conditional loop (repeat loop): Executed until a specific condition
+
+To group code and reuse it, a function can be written using function()
+command\
+➼ Wrapping a code block into a function allows it to call anywhere in
+the name of the function\
+➼ Usually, functions are defined to process the input specified in the
+argument list and\
+return the result either to a variable or to the console window (rather
+than just printing\
+something).
+
+\
+In the following sample code function is named as "assess.tree.height"
+and it is taking two\
+arguments named "tree.list" and "thresh".\
+➼ End of the function, it returns the mean of the list of tree heights
+
+```{r}
+assess.tree.height <- function(tree.list, thresh)
+{
+  for (i in 1:length(tree.list))
+  { 
+    if(tree.list[i] < thresh){
+      cat('Tree',i, ' is small\n')
+      cat('Tree',i,' should not cut\n')
+    }else {
+      cat('Tree',i,' is large\n')
+    }
+  }
+  return(mean(tree.list))
+}
+
+tree.heights <- c(4.3,7.1,6.3,5.2,3.2)
+thmean <- assess.tree.height(tree.heights, 6)
+```
+
+Example code for a conditional loop
+
+```{r eval=FALSE}
+gcd <- function(a,b)
+{
+  divisor <- min(a,b)
+  dividend <- max(a,b)
+  repeat
+  {
+    remainder <- dividend %% divisor
+    dividend <- divisor
+    divisor <- remainder
+    #Loop condition
+    if (remainder == 0) 
+      break
+  }
+  return(dividend)
+}
+```
+
+# 4. Use of seq() in R
+
+To perform a series of R expressions on each row, on each column, or on
+each data element of data frames and other similar tabular data
+structures, seq() can be used.
+
+➼ Method 1: seq(from, to, by = step value)\
+➼ Method 2: seq(from, to, length.out = sequence length)
+
+1\. Exercise (1): Create the same for loop using sequence length.out
+function. See whether there is a time difference between by and
+length.out functions.
+
+In here "sprintf()" is used to print to a fixed number of decimal
+places.
+
+```{r}
+for (val in seq(0,1,by=0.25))
+{
+  val.squared <- val ∗ val
+  cat("The square of",val,"is ",val.squared,"\n")
+  cat(sprintf("The square of %4.0f is %8.4f \n", val, val.squared))
+}
+
+```
+
+## Exercise (1)
+
+```{r}
+for (val in seq(0,1,length.out=5))
+{
+  val.squared <- val ∗ val
+  cat("The square of",val,"is ",val.squared,"\n")
+  cat(sprintf("The square of %4.0f is %8.4f \n", val, val.squared))
+}
+```
+
+::: {.alert .alert-block .aleart-info}
+Statology: How to Use seq Function in R (With Examples)
+
+[source](https://www.statology.org/seq-function-in-r/)
+
+basic syntax: **seq(from=1, to=1, by=1, length.out=NULL,
+along.with=NULL)**
+
+where:
+
+**from**: The starting value of the sequence.\
+**to**: The end value of the sequence.\
+**by**: The value to increment by. Default is 1.\
+**length.out**: The desired length of the sequence.\
+**along.with:** The desired length that matches the length of this data
+object.
+
+**Example 1: Generate Sequence Starting from One** The following code
+shows how to generate a sequence of values from 1 to 20:
+
+```{r}
+#define sequence
+x <- seq(20)
+#view sequence
+x
+```
+
+### **Example 2: Generate Sequence with Specific Start and End Values**
+
+The following code shows how to generate a sequence of values from 5 to
+15:
+
+```{r}
+#define sequence
+x <- seq(from=5, to=15)
+#view sequence
+x
+```
+
+### **Example 3: Generate Sequence with Custom Incrementing**
+
+The following code shows how to generate a sequence of values from 0 to
+20, incrementing by **4**:
+
+```{r}
+#define sequence
+x <- seq(from=0, to=20, by=4)
+#view sequence
+x
+```
+
+### **Example 4: Generate Sequence with Specific Length**
+
+The following code shows how to generate a sequence of values from 0 to
+20, where the specified length of the sequence is **4**:
+
+```{r}
+#define sequence
+x <- seq(from=0, to=20, length.out=4)
+#view sequence
+x
+```
+
+### **Example 5: Generate Sequence with Length Based on Some Data Object**
+
+The following code shows how to generate a sequence of values from 0 to
+20, where the specified length of the sequence should match the length
+of another data object:
+
+```{r}
+#define vector y
+y <- c(1, 4, 6, 9)
+#define sequence x, make sure length matches the length of y
+x <- seq(from=0, to=20, along.with=y)
+#view sequence
+x
+
+```
+
+Notice that sequence *x* goes from 0 to 20 and its length (4) matches
+the length of vector *y*.
+:::
+
+# 5. Writing function into a text file
+
+When the function is saved to an R file it can be called and loaded when
+you run R
+
+Write functions cube.root() and circle.area() in your script file
+
+``` r
+cube.root <- function(x) {
+result <- x ^ (1/3)
+return(result)}
+circle.area <- function(r) {
+result <- pi ∗ r ^ 2
+return(result)}
+```
+
+Select "Save As" option to save the file with the name "functions.R"\
+When you want to call the function\
+➼ First, load the source file using the source() command\
+➼ Then call the relevant function in the source file
+
+```{r}
+source('01.dump/functions.R')
+cube.root(343)
+circle.area(10)
+```
+
+# 6. Data checking
+
+This will help to determine whether the data that have been given to the
+function are the right kind
+
+So the functions should be able to spot such issues and print a warning
+explaining the problem. This will eliminate crashing the code with a
+fairly obscure error message
+
+This can be achieved through the "if condition" and "is" checking
+(is.numeric())
+
+```{r eval=FALSE}
+cube.root <- function(x) {
+  if (is.numeric(x)) {
+    if (x >= 0) {
+      result <- x^(1/3)
+    }else{
+      result <- -(-x)^(1/3)
+    }
+    return(result)
+  }else{
+    cat("WARNING: Input must be numerical, not character\n")
+    return(NA)
+  }
+}
+```
+
+# 7. Apply Functions (apply, lapply, and spply)
+
+These functions offer an easier way to interrogate, manipulate, and
+summarize spatial data, either by their variable attributes or by their
+spatial properties.
+
+➼ Apply functions are quicker than loops.
+
+➼ Also called as group functions which the function can be applied to
+the same set of\
+operations over each element in a data object (rows, column, list
+element)
+
+```{r eval=FALSE}
+install.packages('rgeos', dependencies = TRUE)
+install.packages('GISTools_0.7-4.tar.gz', dependencies = TRUE)
+```
+
+Following code will load "Newhaven data" and use the "blocks" dataset to
+determine which\
+ethnicity formed the largest group in each block.
+
+In here apply() function has three arguments,
+
+➼ The first argument find the dataset that the given function is applied
+(here it is the 14th to\
+17th columns of the blocks data frame)\
+14: P_WHITE 15: P_BLACKS 16: P_AMERI_ES 17: P_ASIAN 18: P_OTHERS\
+\
+➼ The second argument is the margin and when it is equal to 1, it
+indicates that apply will\
+operate over each row. If it is 2, the function will be applied over
+columns\
+➼ The third argument is the function that we apply to the selected data
+in argument 1\
+"which.max" function will identify the largest group\
+
+```{r}
+library(GISTools)
+data(newhaven)
+
+## the @data route
+head(blocks@data[, 14:18])
+
+## the data frame route
+#head(data.frame(blocks[, 14:17]))
+res.vec <-apply(data.frame(blocks[,14:17]), 1, which.max)
+colnames(data.frame(blocks[,14:17]))[res.vec]
+```
+
+## Exercise (2)
+
+Using apply function find the size of the largest block of each
+ethnicity type and the relevant block id.
+
+```{r}
+res.vec <-apply(data.frame(blocks[,14:17]), 2, which.max)
+rownames(data.frame(blocks[,14:17]))[res.vec]
+```
+
+```{r}
+# results makes sense?
+checker <- data.frame(blocks)
+for(i in 1:length(res.vec)){
+  print(checker[res.vec[i],14:18])
+}
+
+```
+
+## Exercise (3)
+
+Find the number of blocks available in the dataset using "apply" and
+"length" function
+
+Consider georgia data and georgia.polys list. To plot the coordinates of
+each element of georgia.polys list:\
+i. First plot extent is defined\
+ii. Each polygon is plotted in turn using a loop
+
+```{r}
+data(georgia)
+plot(bbox(georgia2)[1,], 
+     bbox(georgia2)[2,], 
+     asp = 1, 
+     type='n', 
+     xlab='', ylab='' )
+
+for (i in 1:length(georgia.polys)){
+  points(georgia.polys[[i]], type='l')
+  # small delay so that plotting can be seen
+  Sys.sleep(0.05)
+}
+```
+
+# 8. Plots
+
+## A Basic plot tools
+
+i\. The most basic plot is scatter plot\
+ii. Can set many option to change the plot environment\
+Example: pch: character, col: color of the data points
+
+``` r
+plot(x1,y1,pch=16, col=’red’)
+```
+
+Option "type=1" will produces a line plot of the two variables. *lwd*
+specifies the plot line width. ylim option sets the limits of the
+y-axis, while xlim does the same for the x-axis.
+
+*lines* function will add new line to the plot and "lty" specifies the
+type of line (dotted, simple,etc.).
+
+```{r}
+x2 <- seq(0,2∗pi,len=100)
+y2 <- sin(x2)
+plot(x2,y2,type='l')
+plot(x2,y2,type='l', 
+     lwd=3, 
+     col='darkgreen')
+#Refer the Figure 1
+plot(x2,y2,
+     type='l', 
+     col='darkgreen', 
+     lwd=3, 
+     ylim=c(−1.2,1.2))
+
+y2r <- y2 + rnorm(100,0,0.1)
+
+points(x2,y2r, 
+       pch=16, 
+       col='darkred')
+y4 <- cos(x2)
+plot(x2, y2, 
+     type='l', 
+     lwd=3, 
+     col='darkgreen')
+lines(x2, y4, 
+      lwd=3, lty=2, 
+      col='darkblue')
+```
+
+## B Points with Polygons
+
+The function polygon adds a polygon to an existing plot.\
+The option col sets the polygon fill colour.\
+By default a black border is drawn, but it can be disabled using the
+parameter border = NA
+
+When "asp=1" the x and y scales are the same.
+
+type = 'n' draws the plot axes to correct scale (i.e. of the y2 and y4
+data) but adds no lines or points.
+
+```{r}
+x2 <- seq(0,2∗pi,len=100)
+y2 <- sin(x2)
+y4 <- cos(x2)
+# specify the plot layout and order
+par(mfrow = c(1,2))
+# plot #1
+plot(y2,y4)
+polygon(y2,y4,col='lightgreen')
+# plot #2
+#this time with 'asp' to set the aspect ratio of the axes
+plot(y2,y4, asp=1, type='n')
+polygon(y2,y4,col='lightgreen')
+```
+
+## C Plots with geographical coordinates
+
+Call the "GISTools" package; "library(GISTools)".
+
+*Hint: You should already install this package into your R platform
+before calling it.*\
+
+For this practical we will use Georgia datasets in the GISTools package.
+This dataset can be loaded using the function "data(georgia)"\
+With data(georgia) will load three datasets georgia, georgia2 and
+georgia.polys.\
+1. From "georgia.polys" dataset we will select the first element to get
+the coordinates (Step 4 in code).\
+2. If "type='n'" no lines or polygons\
+3. "angle=135" defines the angle of the filling line of the polygon
+
+```{r}
+
+library(GISTools)
+#2. 
+data(georgia)
+#3. #select the first element
+#4. 
+appling <- georgia.polys[[1]]
+# appling is a two-column matrix.
+#5. # set the plot extent
+#6. 
+plot(appling, asp=1, type='n', xlab='Easting', ylab="Northing")
+#7. # plot the selected features with hatching
+#8. 
+polygon(appling, density=14, angle=135)
+
+```
+
+Try to replace the line 8 in the code snippet 11 with following code:
+
+i\. rgb represents Red, Green, and Blue values and the last (4th ) value
+indicates the transparency (0-invisible to 1-opaque)
+
+ii\. Add "text" function to add some text to the plot, cex (character
+expansion) parameter defines the size of text.
+
+```{r}
+#4. 
+appling <- georgia.polys[[1]]
+# appling is a two-column matrix.
+#5. # set the plot extent
+#6. 
+plot(appling, asp=1, type='n', xlab='Easting', ylab="Northing")
+#7. # plot the selected features with hatching
+#8. 
+polygon(appling, col=rgb(0,0.5,0.7,0.4))
+text(1287000,1053000,"Appling County",cex=1.5)
+text(1287000,1049000,"Georgia",col='darkred')
+mtext('Figure 2.5 Appling County with transparency', cex = 1.4)
+```
+
+## D Introduction to ggplot
+
+The "ggplot" approach handles each element of the graphic separately in
+a series of layers, so it is easy to control each part of the plot.
+
+ggplot2 package is included as part of the tidyverse. So can install
+tidyverse package to install ggplot2 or install ggplot2 on its own
+
+ggplot2 has two functions to create plots\
+1. qplot(): to produce quick, simple plots.\
+2. Figure 1 can be recreated using following code\
+3. To add new parameter to the qplot() function + should be added
+before.
+
+```{r}
+library(ggplot2)
+```
+
+```{r}
+qplot(x2,y2r,
+      col=I('darkred'), 
+      ylim=c(−1.2, 1.2)) +
+geom_line(aes(x2,y2), 
+          col=I("darkgreen"), 
+          size = I(1.5)) +
+theme(axis.text=element_text(size=20), 
+      axis.title= element_text(size=20,face="bold"))
+```
+
+### Different types of plot using ggplot
+
+Set up a dataset which suits for different plotting options
+
+1\. Use the same georgia data frame and convert it to tibble (named it
+as "tb" )\
+2. Create an indicator for Rural and Non-Rural using following code\
+a. Here +0 is used to convert True and False to 1 and 0
+
+```{r}
+library(tibble)
+```
+
+```{r}
+data(georgia)
+tb <- as_tibble(georgia)
+tb$rural <- as.factor((tb$PctRural > 50) + 0)
+levels(tb$rural) <- list("Non-Rural" = 0, "Rural"=1)
+```
+
+3\. Then we create an income category variable around the interquartile
+range of the MedInc variable (median county income).\
+a. The distributions of "IncClass" can be checked using
+"table(tb\$IncClass)" command
+
+```{r}
+tb$IncClass <- rep("Average", nrow(tb))
+tb$IncClass[tb$MedInc >= 41204] = "Rich"
+tb$IncClass[tb$MedInc <= 29773] = "Poor"
+```
+
+## E Scatter plots
+
+Now draw a scatter plot considering PctBach (percentages of the county
+populations with bachelor's degrees) and PctEld (percentages of the
+county populations who are elderly).
+
+Follow the code below and see figure
+
+```{r}
+ggplot(data = tb, 
+       mapping = aes(x = PctBach, y = PctEld)) + 
+  geom_point() +
+  geom_smooth(method = "lm", 
+              col = "red", 
+              fill = "lightsalmon") + 
+  theme_bw() +
+  xlab("% of population with bachelor degree") + 
+  ylab("% of population that are elderly")
+```
+
+## F Histogram
+
+To examine the distributions of income across the 159 counties of
+Georgia a histogram can be drawn as follows
+
+```{r}
+ggplot(tb, 
+       aes(x=MedInc)) + 
+  geom_histogram(aes(y=..density..),
+                 binwidth=5000,colour="white") + 
+  geom_density(alpha=.4, fill="darksalmon") +
+  geom_vline(aes(xintercept=median(MedInc, na.rm=T)), 
+             color="orangered1",
+             linetype="dashed", 
+             size=1)
+```
+
+## G Box-and-whisker plot
+
+In this practical, we will explore the P_VACANT attribute of blocks
+dataset in New Haven data.
+
+Use of Histogram can be created using two options\
+a. Standard approach OR\
+b. Using ggplot
+
+```{r}
+# standard approach with hist
+hist(blocks$P_VACANT, 
+breaks = 40, 
+col = "cyan", 
+border = "salmon", 
+main = "The distribution of vacant property percentages", 
+xlab = "percentage vacant", 
+xlim = c(0,40))
+```
+
+```{r eval=FALSE}
+install.packages("ggplot2", dependencies = TRUE)
+install.packages("tidyverse", dependencies = TRUE)
+
+```
+
+```{r}
+library(tidyr)
+library(ggplot2)
+data(newhaven)
+# ggplot approach
+ggplot(blocks@data, aes(P_VACANT)) +
+  geom_histogram(col = "salmon", 
+                 fill = "cyan", 
+                 bins = 40) + 
+  xlab("percentage vacant") +
+  labs(title = "The distribution of vacant property percentages")
+```
+
+In this exercise, we will be using geom.\_boxplot function in the
+ggplot2 package
+
+To illustrate this
+
+i\. we will split blocks dataset into high- and low-vacancy areas based
+on whether the proportion of properties vacant is greater than 10%
+
+ii\. Assigned to 2 (to consider as high) and 1 (to consider as low)
+
+iii\. Use factor function to create two levels as "low" and "high"
+
+a\. In ggplot function will use melt function in the reshape2 package
+and it will take wide-format data and melts it into long-format data.
+
+```{r}
+library(reshape2)
+# a logical test
+index <- blocks$P_VACANT > 10
+# assigned to 2 high, 1 low
+blocks$vac <- index + 1
+blocks$vac <- factor(blocks$vac, labels = c("Low", "High"))
+#Then apply the geom_boxplot function:
+library(ggplot2)
+ggplot(melt(blocks@data[, c("P_OWNEROCC", "P_WHITE", "P_BLACK", "vac")]),
+       aes(variable, value))+ 
+  geom_boxplot() + facet_wrap(~vac)
+```
+
+## Exercise (4)
+
+Create a similar box plot to illustrate the distribution of the vacant
+("P_VACANT") and owner-occupied ("P_OWNEROCC") properties with respect
+to the high and low populations ("POP1990") in the blocks.
+
+## H Mosaic plot
+
+Since the mosaic plots are used to visualize the statistical properties
+between variables for this exercise we will plot vacant housing across
+ethnic groups
+
+a\. To draw mosaic plot we need ggmosaic package\
+b. Select the relevant columns from block dataset\
+c. Add column names to the dataset\
+d. Create true/false for vacant properties\
+e. Use xtabs() function to create cross-tabulation\
+f. Use melt function from the reshape2 package to prepare data from
+plotting\
+g. Use stat_mosaic function and ggplot function to create the mosaic
+plot
+
+```{r eval= FALSE}
+install.packages("ggmosaic", dep = T)
+```
+
+```{r}
+# create the dataset
+pops <- data.frame(blocks[,14:18]) ∗ data.frame(blocks)[,11]
+pops <- as.matrix(pops/100)
+colnames(pops) <- c("White", "Black", "Ameri", "Asian", "Other")
+
+# a true / false for vacant properties
+vac.10 <- (blocks$P_VACANT > 10)
+
+# create a crosstabulation
+mat.tab <- xtabs(pops ~vac.10)
+
+# melt the data
+df <- melt(mat.tab)
+
+# load the packages
+library(ggmosaic)
+
+# call ggplot and stat_mosaic
+ggplot(data = df) +
+  stat_mosaic(aes(weight = value, 
+                  x = product(Var2), 
+                  fill=vac.10), 
+              na.rm=TRUE) +
+  theme(axis.text.x=element_text(angle=−90, hjust= .1)) +
+  labs(y='Proportion of Vacant Properties',
+       x ='Ethnic group',
+       title="Mosaic Plot of Vacant Properties with ethnicity") +
+  guides(fill=guide_legend(title = "> 10 percent", reverse = TRUE))
+```
